@@ -38,7 +38,7 @@ VITE_API_BASE_URL=http://localhost:3000 bun run dev:mock
 
 ## Mode B — Live backend health check
 
-1. Start the backend (BFF) on the expected port (default `http://localhost:3000`).
+1. Start the backend per [spec 002 quickstart](../002-backend-connectivity/quickstart.md) (Postgres + `employee-manager-be` on port `3000`).
 2. Run the frontend **without** MSW:
 
 ```bash
@@ -48,26 +48,32 @@ bun run dev
 Expected behavior:
 
 - The baseline page calls `GET {VITE_API_BASE_URL}/health`.
-- A healthy backend returns `status: "ok"` and the UI shows success.
+- A healthy backend returns `status: "ok"` with `db.status: "up"` (spec 002 contract) and the UI shows success.
 
 ## Clean and nuke
+
+Target repository: `employee-manager-fe`. Scripts live under `scripts/` (`clean.ts`, `nuke.ts`, `paths.ts`).
 
 Remove build artifacts only (fast):
 
 ```bash
+cd employee-manager-fe
 bun run clean
 ```
 
 Deep reset (removes `node_modules`, reinstalls from `bun.lock`):
 
 ```bash
+cd employee-manager-fe
 bun run nuke
 ```
 
-Expected behavior:
+| Command | Removes | Keeps |
+|---------|---------|-------|
+| `bun run clean` | `dist/`, `dist-ssr/`, `src/generated/` (OpenAPI client from spec 002), `node_modules/.tmp/`, `node_modules/.vite/` | `node_modules/`, hand-written `src/`, `bun.lock`, `.env` |
+| `bun run nuke` | everything `clean` removes, plus `node_modules/` (then `bun install`) | hand-written `src/`, `tests/`, `public/`, `bun.lock`, `.env` |
 
-- `clean` deletes `dist/`, `dist-ssr/`, `node_modules/.tmp/`, and `node_modules/.vite/`; source and `node_modules` packages remain.
-- `nuke` runs `clean`, deletes `node_modules/`, then runs `bun install`. Keeps `bun.lock`, `.env`, and `public/mockServiceWorker.js`.
+After `clean` or `nuke`, run `bun run build:app` or `bun run dev` to regenerate `src/generated/openapi.ts` (`prebuild:app`). After `nuke`, run `bun run dev` or `bun run dev:mock` as usual. You do not need `msw:init` again unless you deleted `public/mockServiceWorker.js`.
 
 ## Run Tests
 
@@ -84,5 +90,5 @@ Tests SHOULD use MSW `setupServer` with the same handlers as development so `fet
 - [x] With MSW disabled and backend running, health status reflects the live BFF response.
 - [x] With MSW disabled and backend stopped, the UI surfaces a fetch or HTTP error clearly.
 - [x] `bun run build:app` and `bun run lint` succeed.
-- [x] `bun run clean` removes `dist/`; `bun test` still passes without reinstall.
+- [x] `bun run clean` removes `dist/` and `src/generated/`; `bun run build:app` regenerates the client; `bun test` still passes without reinstall.
 - [x] `bun run nuke` reinstalls dependencies; `bun test` and `bun run build:app` succeed afterward.
