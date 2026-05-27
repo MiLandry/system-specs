@@ -23,7 +23,7 @@ No body. Optional headers:
 
 ## Response — Error (non-2xx)
 
-The frontend treats any non-OK HTTP status as a failed health check and surfaces the status text to the user.
+The frontend treats any non-OK HTTP status as a failed health check and surfaces the status, status text, and response body text to the user.
 
 ## MSW Mocking
 
@@ -35,7 +35,7 @@ Example handler shape (illustrative):
 import { http, HttpResponse } from 'msw'
 
 export const healthHandlers = [
-  http.get('http://localhost:3000/health', () =>
+  http.get(({ request }) => new URL(request.url).pathname === '/health', () =>
     HttpResponse.json({
       status: 'ok',
       timestamp: new Date().toISOString(),
@@ -45,7 +45,7 @@ export const healthHandlers = [
 ]
 ```
 
-Handlers SHOULD be parameterized to match `VITE_API_BASE_URL` so the same contract works across environments.
+Handlers SHOULD match requests to `GET /health` reliably across environments (for example by matching request pathname), so the same contract works for both mocked and live flows.
 
 ## Client
 

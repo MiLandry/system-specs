@@ -30,7 +30,7 @@ Expected behavior:
 - MSW intercepts `GET /health` and returns the mocked `HealthStatus` payload.
 - The baseline page shows a successful connectivity message without a running BFF.
 
-Optional: override the mocked base URL if handlers use absolute URLs:
+Optional: override API base URL (the current MSW handler matches `GET /health` by pathname, so this is typically not required for mocking):
 
 ```bash
 VITE_API_BASE_URL=http://localhost:3000 bun run dev:mock
@@ -79,10 +79,10 @@ Tests SHOULD use MSW `setupServer` with the same handlers as development so `fet
 
 ## Verification Checklist
 
-- [ ] Baseline page loads at the Vite dev URL.
-- [ ] With `bun run dev:mock`, health status renders without a backend.
-- [ ] With MSW disabled and backend running, health status reflects the live BFF response.
-- [ ] With MSW disabled and backend stopped, the UI surfaces a fetch or HTTP error clearly.
-- [ ] `bun run build:app` and `bun run lint` succeed.
-- [ ] `bun run clean` removes `dist/`; `bun test` still passes without reinstall.
-- [ ] `bun run nuke` reinstalls dependencies; `bun test` and `bun run build:app` succeed afterward.
+- [x] Baseline page loads at the Vite dev URL.
+- [x] With `bun run dev:mock`, health status renders without a backend.
+- [x] With MSW disabled and backend running, health status reflects the live BFF response.
+- [x] With MSW disabled and backend stopped, the UI surfaces a fetch or HTTP error clearly.
+- [x] `bun run build:app` and `bun run lint` succeed.
+- [x] `bun run clean` removes `dist/`; `bun test` still passes without reinstall.
+- [x] `bun run nuke` reinstalls dependencies; `bun test` and `bun run build:app` succeed afterward.
