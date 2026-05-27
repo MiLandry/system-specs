@@ -70,10 +70,10 @@ bun run nuke
 
 | Command | Removes | Keeps |
 |---------|---------|-------|
-| `bun run clean` | `dist/`, `dist-ssr/`, `node_modules/.tmp/`, `node_modules/.vite/` | `node_modules/`, source, `bun.lock`, `.env` |
-| `bun run nuke` | everything `clean` removes, plus `node_modules/` (then `bun install`) | `src/`, `tests/`, `public/`, `bun.lock`, `.env` |
+| `bun run clean` | `dist/`, `dist-ssr/`, `src/generated/` (OpenAPI client from spec 002), `node_modules/.tmp/`, `node_modules/.vite/` | `node_modules/`, hand-written `src/`, `bun.lock`, `.env` |
+| `bun run nuke` | everything `clean` removes, plus `node_modules/` (then `bun install`) | hand-written `src/`, `tests/`, `public/`, `bun.lock`, `.env` |
 
-After `nuke`, run `bun run dev` or `bun run dev:mock` as usual. You do not need `msw:init` again unless you deleted `public/mockServiceWorker.js`.
+After `clean` or `nuke`, run `bun run build:app` or `bun run dev` to regenerate `src/generated/openapi.ts` (`prebuild:app`). After `nuke`, run `bun run dev` or `bun run dev:mock` as usual. You do not need `msw:init` again unless you deleted `public/mockServiceWorker.js`.
 
 ## Run Tests
 
@@ -90,5 +90,5 @@ Tests SHOULD use MSW `setupServer` with the same handlers as development so `fet
 - [x] With MSW disabled and backend running, health status reflects the live BFF response.
 - [x] With MSW disabled and backend stopped, the UI surfaces a fetch or HTTP error clearly.
 - [x] `bun run build:app` and `bun run lint` succeed.
-- [x] `bun run clean` removes `dist/`; `bun test` still passes without reinstall.
+- [x] `bun run clean` removes `dist/` and `src/generated/`; `bun run build:app` regenerates the client; `bun test` still passes without reinstall.
 - [x] `bun run nuke` reinstalls dependencies; `bun test` and `bun run build:app` succeed afterward.

@@ -96,8 +96,8 @@ Same pattern as spec 001 — see [`../001-baseline-app-poc/quickstart.md`](../00
 
 ```bash
 cd path/to/employee-manager-fe
-bun run clean   # dist/, Vite/TS caches — keeps node_modules
+bun run clean   # dist/, src/generated/, Vite/TS caches — keeps node_modules
 bun run nuke    # clean + node_modules + bun install
 ```
 
-After `nuke`, run `bun run dev` or `bun run dev:mock` as usual. Re-run `bun run msw:init` only if `public/mockServiceWorker.js` was deleted.
+After `clean` or `nuke`, run `bun run build:app` or `bun run dev` to regenerate `src/generated/openapi.ts`. After `nuke`, run `bun run dev` or `bun run dev:mock` as usual. Re-run `bun run msw:init` only if `public/mockServiceWorker.js` was deleted.

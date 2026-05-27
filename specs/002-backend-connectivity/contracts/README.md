@@ -27,7 +27,7 @@ bun add -d openapi-typescript
 bunx openapi-typescript ../system-specs/specs/002-backend-connectivity/contracts/openapi.yaml -o src/generated/openapi.ts
 ```
 
-Or `bun run codegen:api` from `employee-manager-fe` (same output path).
+Or `bun run codegen:api` from `employee-manager-fe` (same output path). Output is gitignored under `src/generated/`; `prebuild:app` runs before `build:app`, and `bun run clean` removes it.
 
 **Backend** (`employee-manager-be`) — optional Zod from OpenAPI (handlers currently mirror this spec manually).
 

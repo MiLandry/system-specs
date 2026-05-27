@@ -25,7 +25,7 @@
 
 - OpenAPI-derived types (`employee-manager-fe` `bun run codegen:api`) and the `/health` client treat non-2xx as failures.
 - Mock mode keeps MSW for offline UI work.
-- Cleanup scripts match spec 001: `bun run clean` and `bun run nuke` in `employee-manager-fe` (see [`../001-baseline-app-poc/quickstart.md`](../001-baseline-app-poc/quickstart.md)).
+- Cleanup scripts match spec 001: `bun run clean` and `bun run nuke` in `employee-manager-fe` remove `src/generated/` (gitignored OpenAPI client); `prebuild:app` regenerates it on the next build (see [`../001-baseline-app-poc/quickstart.md`](../001-baseline-app-poc/quickstart.md)).
 
 ### Developer tooling (`employee-manager-be`)
 
