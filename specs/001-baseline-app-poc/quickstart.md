@@ -6,13 +6,14 @@ Target repository: `employee-manager-fe`
 
 ```bash
 cd employee-manager-fe
-yarn install
+bun install
+cp .env.example .env
 ```
 
 ## Initialize MSW (first-time setup)
 
 ```bash
-yarn msw init public
+bun run msw:init
 ```
 
 This creates `public/mockServiceWorker.js`, required for browser interception during development.
@@ -20,7 +21,7 @@ This creates `public/mockServiceWorker.js`, required for browser interception du
 ## Mode A — UI development with MSW (no backend)
 
 ```bash
-VITE_ENABLE_MSW=true yarn dev
+bun run dev:mock
 ```
 
 Expected behavior:
@@ -32,7 +33,7 @@ Expected behavior:
 Optional: override the mocked base URL if handlers use absolute URLs:
 
 ```bash
-VITE_ENABLE_MSW=true VITE_API_BASE_URL=http://localhost:3000 yarn dev
+VITE_API_BASE_URL=http://localhost:3000 bun run dev:mock
 ```
 
 ## Mode B — Live backend health check
@@ -41,7 +42,7 @@ VITE_ENABLE_MSW=true VITE_API_BASE_URL=http://localhost:3000 yarn dev
 2. Run the frontend **without** MSW:
 
 ```bash
-yarn dev
+bun run dev
 ```
 
 Expected behavior:
@@ -49,10 +50,29 @@ Expected behavior:
 - The baseline page calls `GET {VITE_API_BASE_URL}/health`.
 - A healthy backend returns `status: "ok"` and the UI shows success.
 
+## Clean and nuke
+
+Remove build artifacts only (fast):
+
+```bash
+bun run clean
+```
+
+Deep reset (removes `node_modules`, reinstalls from `bun.lock`):
+
+```bash
+bun run nuke
+```
+
+Expected behavior:
+
+- `clean` deletes `dist/`, `dist-ssr/`, `node_modules/.tmp/`, and `node_modules/.vite/`; source and `node_modules` packages remain.
+- `nuke` runs `clean`, deletes `node_modules/`, then runs `bun install`. Keeps `bun.lock`, `.env`, and `public/mockServiceWorker.js`.
+
 ## Run Tests
 
 ```bash
-yarn test
+bun test
 ```
 
 Tests SHOULD use MSW `setupServer` with the same handlers as development so `fetchHealthStatus` is exercised over HTTP.
@@ -60,7 +80,9 @@ Tests SHOULD use MSW `setupServer` with the same handlers as development so `fet
 ## Verification Checklist
 
 - [ ] Baseline page loads at the Vite dev URL.
-- [ ] With `VITE_ENABLE_MSW=true`, health status renders without a backend.
+- [ ] With `bun run dev:mock`, health status renders without a backend.
 - [ ] With MSW disabled and backend running, health status reflects the live BFF response.
 - [ ] With MSW disabled and backend stopped, the UI surfaces a fetch or HTTP error clearly.
-- [ ] `yarn build` and `yarn lint` succeed.
+- [ ] `bun run build:app` and `bun run lint` succeed.
+- [ ] `bun run clean` removes `dist/`; `bun test` still passes without reinstall.
+- [ ] `bun run nuke` reinstalls dependencies; `bun test` and `bun run build:app` succeed afterward.

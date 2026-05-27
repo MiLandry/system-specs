@@ -27,7 +27,7 @@ The frontend treats any non-OK HTTP status as a failed health check and surfaces
 
 ## MSW Mocking
 
-When `VITE_ENABLE_MSW=true`, MSW handlers in `employee-manager-fe/src/mocks/handlers/health.ts` MUST implement this contract for the configured base URL.
+When running `bun run dev:mock`, MSW handlers in `employee-manager-fe/src/mocks/handlers/health.ts` MUST implement this contract for requests to `GET /health`.
 
 Example handler shape (illustrative):
 

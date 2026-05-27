@@ -71,12 +71,13 @@ employee-manager-fe/
 
 1. **Add MSW**: Install `msw` as a dev dependency; run `msw init public` to emit the service worker script.
 2. **Define handlers**: Implement `GET /health` handler(s) for success and error scenarios in `src/mocks/handlers/health.ts`, using `VITE_API_BASE_URL` (or relative URLs) consistent with `buildHealthUrl`.
-3. **Browser worker**: In `src/mocks/browser.ts`, compose handlers and export `worker`; in `main.tsx`, call `worker.start({ onUnhandledRequest: 'bypass' })` when `import.meta.env.VITE_ENABLE_MSW === 'true'`.
+3. **Browser worker**: In `src/mocks/browser.ts`, compose handlers and export `worker`; in `main.tsx`, call `worker.start({ onUnhandledRequest: 'bypass' })` when `import.meta.env.MODE === 'mock'` (via `bun run dev:mock`).
 4. **Test server**: In `src/mocks/server.ts`, use `setupServer(...handlers)`; reset handlers in test `afterEach`.
 5. **Baseline UI**: Update `App.tsx` to call `fetchHealthStatus` on mount and render status, timestamp, and message (or error state).
-6. **Environment**: Document `VITE_API_BASE_URL` (default `http://localhost:3000`) and `VITE_ENABLE_MSW` (default `false` for live backend, `true` for UI-only dev).
+6. **Environment**: Document `VITE_API_BASE_URL` (default `http://localhost:3000`). MSW is enabled only through `bun run dev:mock` (`vite --mode mock`), not env vars.
 7. **Remove legacy mock**: Delete `src/mocks/healthApiMock.ts` and any imports; MSW replaces the in-memory mock factory.
-8. **Verification**: Follow `quickstart.md` for live-backend and MSW-only flows.
+8. **Cleanup scripts**: Add `bun run clean` (build/cache artifacts) and `bun run nuke` (clean + `node_modules` + `bun install`) per FR-004.
+9. **Verification**: Follow `quickstart.md` for live-backend, MSW-only, and cleanup flows.
 
 ## Phase 0 Research
 

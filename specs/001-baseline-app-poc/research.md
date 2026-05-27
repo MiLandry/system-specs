@@ -20,6 +20,6 @@ Use **Mock Service Worker (MSW)** as the sole API mocking layer for the baseline
 ## MSW Configuration Notes
 
 - Run `msw init public` once to add `mockServiceWorker.js` under `public/`.
-- Use `VITE_ENABLE_MSW=true` to start the browser worker during `yarn dev`.
+- Use `bun run dev:mock` (`vite --mode mock`) to start the browser worker; do not use a separate MSW env flag.
 - Prefer `onUnhandledRequest: 'bypass'` so non-health assets and HMR are not blocked.
 - Match handler URLs to `buildHealthUrl()` (respect `VITE_API_BASE_URL` and `/health` path).
