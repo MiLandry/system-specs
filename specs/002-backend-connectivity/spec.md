@@ -25,6 +25,17 @@
 
 - OpenAPI-derived types (`employee-manager-fe` `bun run codegen:api`) and the `/health` client treat non-2xx as failures.
 - Mock mode keeps MSW for offline UI work.
+- Cleanup scripts match spec 001: `bun run clean` and `bun run nuke` in `employee-manager-fe` (see [`../001-baseline-app-poc/quickstart.md`](../001-baseline-app-poc/quickstart.md)).
+
+### Developer tooling (`employee-manager-be`)
+
+The backend repo MUST expose Bun cleanup scripts aligned with the frontend pattern:
+
+- **`bun run clean`** — removes `dist/`, `build/`, and `node_modules/.cache/`; keeps `node_modules/`, source, `bun.lock`, and `.env`.
+- **`bun run nuke`** — runs `clean`, removes `node_modules/`, then `bun install` (keeps `bun.lock` and `.env`).
+- **`bun run stop`** — sends `SIGTERM` to any process listening on `PORT` (from `.env`, default `3000`).
+
+Implementation: `scripts/clean.ts`, `scripts/nuke.ts`, `scripts/stop.ts`, and `scripts/paths.ts` in `employee-manager-be` (see repo `README.md`).
 
 See [`quickstart.md`](quickstart.md) for verification steps.
 

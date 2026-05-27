@@ -38,7 +38,7 @@ VITE_API_BASE_URL=http://localhost:3000 bun run dev:mock
 
 ## Mode B — Live backend health check
 
-1. Start the backend (BFF) on the expected port (default `http://localhost:3000`).
+1. Start the backend per [spec 002 quickstart](../002-backend-connectivity/quickstart.md) (Postgres + `employee-manager-be` on port `3000`).
 2. Run the frontend **without** MSW:
 
 ```bash
@@ -48,26 +48,32 @@ bun run dev
 Expected behavior:
 
 - The baseline page calls `GET {VITE_API_BASE_URL}/health`.
-- A healthy backend returns `status: "ok"` and the UI shows success.
+- A healthy backend returns `status: "ok"` with `db.status: "up"` (spec 002 contract) and the UI shows success.
 
 ## Clean and nuke
+
+Target repository: `employee-manager-fe`. Scripts live under `scripts/` (`clean.ts`, `nuke.ts`, `paths.ts`).
 
 Remove build artifacts only (fast):
 
 ```bash
+cd employee-manager-fe
 bun run clean
 ```
 
 Deep reset (removes `node_modules`, reinstalls from `bun.lock`):
 
 ```bash
+cd employee-manager-fe
 bun run nuke
 ```
 
-Expected behavior:
+| Command | Removes | Keeps |
+|---------|---------|-------|
+| `bun run clean` | `dist/`, `dist-ssr/`, `node_modules/.tmp/`, `node_modules/.vite/` | `node_modules/`, source, `bun.lock`, `.env` |
+| `bun run nuke` | everything `clean` removes, plus `node_modules/` (then `bun install`) | `src/`, `tests/`, `public/`, `bun.lock`, `.env` |
 
-- `clean` deletes `dist/`, `dist-ssr/`, `node_modules/.tmp/`, and `node_modules/.vite/`; source and `node_modules` packages remain.
-- `nuke` runs `clean`, deletes `node_modules/`, then runs `bun install`. Keeps `bun.lock`, `.env`, and `public/mockServiceWorker.js`.
+After `nuke`, run `bun run dev` or `bun run dev:mock` as usual. You do not need `msw:init` again unless you deleted `public/mockServiceWorker.js`.
 
 ## Run Tests
 

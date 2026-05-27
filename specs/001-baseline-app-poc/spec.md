@@ -35,6 +35,8 @@ A developer wants to confirm that the frontend tooling works and that local setu
 
 1. **Given** a fresh repository clone, **when** the developer follows the documented setup steps, **then** dependency installation completes without errors.
 2. **Given** the frontend workspace is prepared, **when** the developer runs the documented start and verification commands, **then** the commands complete successfully and report readiness.
+3. **Given** build artifacts exist after `bun run build:app`, **when** the developer runs `bun run clean`, **then** `dist/` and tool caches are removed while `node_modules/` and source remain.
+4. **Given** a corrupted or stale dependency tree, **when** the developer runs `bun run nuke`, **then** `node_modules/` is removed, dependencies are reinstalled from `bun.lock`, and `bun test` still passes.
 
 ---
 
@@ -53,6 +55,7 @@ A developer wants to confirm that the frontend tooling works and that local setu
 - **FR-002**: The frontend MUST load a baseline page that verifies connectivity to a health contract endpoint via real HTTP requests.
 - **FR-003**: The frontend MUST expose a health contract interface that supports successful and failed responses.
 - **FR-004**: The project MUST provide documented frontend tooling commands for setup, startup, verification, and cleanup.
+- **FR-008**: The frontend workspace MUST provide **`bun run clean`** (remove `dist/`, `dist-ssr/`, and Vite/TypeScript caches under `node_modules` without deleting packages) and **`bun run nuke`** (`clean`, then remove `node_modules/` and run `bun install`, keeping `bun.lock` and `.env`) via `scripts/clean.ts` and `scripts/nuke.ts` as documented in [`quickstart.md`](quickstart.md).
 - **FR-005**: The baseline feature MUST include written verification guidance that a developer can follow to confirm frontend readiness.
 - **FR-006**: The frontend MUST use [Mock Service Worker (MSW)](https://mswjs.io/) to intercept `GET /health` in development and tests when backend-independent UI work is required.
 - **FR-007**: MSW handlers MUST return responses that match the agreed health contract shape so the UI uses the same `fetch` code path for real and mocked requests.
@@ -60,7 +63,7 @@ A developer wants to confirm that the frontend tooling works and that local setu
 ### Key Entities
 
 - **Baseline UI**: The minimal frontend package representing the baseline UI experience.
-- **Developer Tooling**: Workspace commands and documentation that verify environment setup, startup, and cleanup behavior.
+- **Developer Tooling**: Workspace commands and documentation that verify environment setup, startup, and cleanup behavior (`clean`, `nuke`, build, test, lint).
 - **Health API Contract**: The agreed REST/JSON contract used by the UI to verify connectivity (`GET /health`).
 - **MSW mock layer**: Request handlers and browser/test worker setup that emulate the BFF health endpoint without a running backend.
 

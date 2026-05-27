@@ -28,12 +28,42 @@ cp .env.example .env
 bun run dev   # exits immediately with code 1 if the DB is unreachable
 ```
 
+Stop the dev server (process bound to `PORT` in `.env`):
+
+```bash
+cd path/to/employee-manager-be
+bun run stop
+```
+
 (Optional) run backend tests:
 
 ```bash
 cd path/to/employee-manager-be
 bun test
 ```
+
+### Backend cleanup (`employee-manager-be`)
+
+Remove build artifacts only:
+
+```bash
+cd path/to/employee-manager-be
+bun run clean
+```
+
+Deep reset (removes `node_modules`, reinstalls from `bun.lock`):
+
+```bash
+cd path/to/employee-manager-be
+bun run nuke
+```
+
+| Command | Removes | Keeps |
+|---------|---------|-------|
+| `bun run clean` | `dist/`, `build/`, `node_modules/.cache/` | `node_modules/`, source, `bun.lock`, `.env` |
+| `bun run nuke` | everything `clean` removes, plus `node_modules/` (then `bun install`) | `src/`, `tests/`, `bun.lock`, `.env` |
+
+After `nuke`, run `bun run dev` again once Postgres is configured.
 
 Optional: regenerate frontend types whenever the OpenAPI file changes (`employee-manager-fe`):
 
@@ -59,3 +89,15 @@ Expected: baseline UI shows **Connected** with **`db.status: up`**. Non-healthy 
 cd path/to/employee-manager-fe
 bun run dev:mock
 ```
+
+### Frontend cleanup (`employee-manager-fe`)
+
+Same pattern as spec 001 — see [`../001-baseline-app-poc/quickstart.md`](../001-baseline-app-poc/quickstart.md#clean-and-nuke):
+
+```bash
+cd path/to/employee-manager-fe
+bun run clean   # dist/, Vite/TS caches — keeps node_modules
+bun run nuke    # clean + node_modules + bun install
+```
+
+After `nuke`, run `bun run dev` or `bun run dev:mock` as usual. Re-run `bun run msw:init` only if `public/mockServiceWorker.js` was deleted.
