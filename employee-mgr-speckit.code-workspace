@@ -8,9 +8,6 @@
     },
     {
       "path": "../employee-manager-be"
-    },
-    {
-      "path": "../employee-manager-shared"
     }
   ],
   "settings": {
