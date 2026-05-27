@@ -1,45 +1,61 @@
 # Quickstart: Spec 002 — Backend connectivity POC
 
-## Step 1 — Contract only (this step)
+Manual verification only — **CI pipelines are out of scope** for this spec (see [`spec.md`](spec.md)).
 
-Verify the OpenAPI contract:
+## Step 1 — Contract
+
+Verify OpenAPI locally from the `system-specs` checkout:
 
 ```bash
-cd system-specs
+cd path/to/system-specs
 bunx @redocly/cli lint specs/002-backend-connectivity/contracts/openapi.yaml
 ```
 
-Optional: inspect the spec in a browser:
+Preview (optional):
 
 ```bash
+cd path/to/system-specs
 bunx @redocly/cli preview-docs specs/002-backend-connectivity/contracts/openapi.yaml
 ```
 
-## Step 2 — Backend (next)
-
-Scaffold `employee-manager-be` with Bun + Hono and implement `GET /health` per `contracts/openapi.yaml`.
-
-## Step 3 — Frontend live mode
+## Step 2 — Backend (`employee-manager-be`)
 
 ```bash
-# Terminal 1 — backend (after step 2)
-cd employee-manager-be
+cd path/to/employee-manager-be
 bun install
 cp .env.example .env
-bun run dev
-
-# Terminal 2 — frontend (no MSW)
-cd employee-manager-fe
-bun run dev
+# Configure all POSTGRES_* vars and ensure Postgres is running with that database.
+bun run dev   # exits immediately with code 1 if the DB is unreachable
 ```
 
-Expected: baseline UI shows Connected with `status`, `timestamp`, and DB status when backend is up.
-
-## Step 4 — Mock mode (unchanged)
+(Optional) run backend tests:
 
 ```bash
-cd employee-manager-fe
-bun run dev:mock
+cd path/to/employee-manager-be
+bun test
 ```
 
-MSW mocks must return a payload matching `HealthResponse` (including `db` after step 3).
+Optional: regenerate frontend types whenever the OpenAPI file changes (`employee-manager-fe`):
+
+```bash
+cd path/to/employee-manager-fe
+bun run codegen:api
+```
+
+## Step 3 — Frontend live (`employee-manager-fe`, no MSW)
+
+```bash
+cd path/to/employee-manager-fe
+bun install
+cp .env.example .env   # ensure VITE_API_BASE_URL matches the backend PORT
+bun run dev            # plain dev — MSW off
+```
+
+Expected: baseline UI shows **Connected** with **`db.status: up`**. Non-healthy backend states return **503** (and the BFF shuts down afterward), which the frontend surfaces as **Connection failed**.
+
+## Step 4 — Mock mode (`employee-manager-fe`)
+
+```bash
+cd path/to/employee-manager-fe
+bun run dev:mock
+```

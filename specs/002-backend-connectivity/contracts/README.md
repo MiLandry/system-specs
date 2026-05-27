@@ -8,7 +8,9 @@ Canonical OpenAPI source of truth for the Employee Manager BFF. Frontend and bac
 |------|---------|
 | `openapi.yaml` | OpenAPI 3.1 contract for spec 002 |
 
-## Validate locally
+## Validate locally (not CI)
+
+Run this on your machine when changing the contract. **Automated lint in CI is out of scope** for spec 002.
 
 From `system-specs`:
 
@@ -22,10 +24,12 @@ bunx @redocly/cli lint specs/002-backend-connectivity/contracts/openapi.yaml
 
 ```bash
 bun add -d openapi-typescript
-bunx openapi-typescript ../system-specs/specs/002-backend-connectivity/contracts/openapi.yaml -o src/generated/api.ts
+bunx openapi-typescript ../system-specs/specs/002-backend-connectivity/contracts/openapi.yaml -o src/generated/openapi.ts
 ```
 
-**Backend** (`employee-manager-be`) — optional Zod from OpenAPI (step 2 may use hand-written Zod mirroring this spec until codegen is wired).
+Or `bun run codegen:api` from `employee-manager-fe` (same output path).
+
+**Backend** (`employee-manager-be`) — optional Zod from OpenAPI (handlers currently mirror this spec manually).
 
 Paths assume sibling checkouts:
 
@@ -40,7 +44,12 @@ Adjust paths if your layout differs.
 
 ## `GET /health` contract summary
 
-- **200** — `HealthResponse`: `status`, `timestamp`, optional `message`, required `db.status` (`up` | `down`), optional `db.error`
-- **500** — `ApiError`
+| Status | Body |
+|--------|------|
+| **200** | `HealthResponse` — `status`, `timestamp`, optional `message`, `db.status` **`up`** when healthy |
+| **503** | `ApiError` — database unavailable (`code: DATABASE_UNAVAILABLE` when produced by reference BFF); server process terminates shortly after |
+| **500** | `ApiError` — unexpected handler error |
 
-Backward compatibility with spec 001 UI: `status` and `timestamp` remain required; `db` is additive.
+The reference BFF exits before bind if Postgres is unreachable **at startup**; runtime probe failures yield **503** then **process exit**.
+
+Backward compatibility with spec 001 UI baseline: callers still distinguish success via **HTTP 200** vs failure via **non-2xx**.

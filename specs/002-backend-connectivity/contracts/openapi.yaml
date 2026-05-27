@@ -1,0 +1,110 @@
+openapi: 3.1.0
+info:
+  title: Employee Manager BFF API
+  version: 0.0.1
+  description: Spec 002 — health and connectivity POC
+
+servers:
+  - url: http://localhost:3000
+    description: Local BFF
+
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      summary: Health and connectivity check
+      description: |
+        Confirms PostgreSQL connectivity. The frontend treats HTTP 200 with status ok as a healthy check.
+
+        The BFF exits during startup if it cannot open an initial PostgreSQL connection;
+        it does not bind to `PORT` until that probe succeeds.
+
+        If Postgres becomes unreachable after startup, responses are **503** with an `ApiError` body,
+        then the server process terminates (shutdown is queued after the unhealthy response).
+
+        Responses are **`application/json` only** (`Content-Type` is set by the framework).
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Service and Postgres are reachable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              examples:
+                allHealthy:
+                  summary: Healthy
+                  value:
+                    status: ok
+                    timestamp: '2026-05-27T12:00:00.000Z'
+                    message: Service is healthy
+                    db:
+                      status: up
+        '503':
+          description: Postgres unreachable (production server exits shortly after responding)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                error: 'Database unavailable: connection refused'
+                code: 'DATABASE_UNAVAILABLE'
+        '500':
+          description: Unexpected server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+components:
+  schemas:
+    HealthStatus:
+      type: string
+      enum:
+        - ok
+        - error
+
+    DbConnectivityStatus:
+      type: string
+      enum:
+        - up
+        - down
+
+    DbHealth:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          $ref: '#/components/schemas/DbConnectivityStatus'
+        error:
+          type: string
+          description: Present when status is down; safe diagnostic message only
+
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+        - db
+      properties:
+        status:
+          $ref: '#/components/schemas/HealthStatus'
+        timestamp:
+          type: string
+          format: date-time
+        message:
+          type: string
+        db:
+          $ref: '#/components/schemas/DbHealth'
+
+    ApiError:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+        code:
+          type: string
