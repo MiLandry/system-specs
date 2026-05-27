@@ -1,104 +1,93 @@
-# Implementation Plan: [FEATURE]
+# Implementation Plan: Baseline UI POC
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
-
-**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
+**Branch**: `001-baseline-app-poc` | **Date**: 2026-05-27 | **Spec**: `specs/001-baseline-app-poc/spec.md`
+**Input**: Feature specification from `/specs/001-baseline-app-poc/spec.md`
 
 ## Summary
 
-[Extract from feature spec: primary requirement + technical approach from research]
+Deliver a minimal baseline React UI in `employee-manager-fe` that proves frontend startup, developer tooling, and connectivity to the BFF `GET /health` contract. Use **Mock Service Worker (MSW)** to intercept health requests in development and tests so the UI always exercises real `fetch` calls without requiring a running backend.
 
 ## Technical Context
 
-<!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
--->
-
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: TypeScript 6.x, Node.js 24.x, React 19.x  
+**Primary Dependencies**: Vite, React, MSW (`msw`), Bun (test runner)  
+**Storage**: N/A  
+**Testing**: Bun test with MSW `setupServer` for handler-backed integration tests  
+**Target Platform**: Local developer browsers and CI  
+**Project Type**: Standalone frontend web application (`employee-manager-fe`)  
+**Performance Goals**: Baseline page loads and reports health within 30 seconds on a typical laptop  
+**Constraints**: Same `fetchHealthStatus` code path for live backend and MSW; no alternate in-memory mock client for production bundles  
+**Scale/Scope**: Single health endpoint and one baseline connectivity view
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+- **Gate 1 (Test-first)**: Add failing tests for health fetch behavior and MSW handler responses before wiring the baseline UI.
+- **Gate 2 (Simplicity)**: One MSW handler module for `GET /health`; avoid a parallel mock API abstraction that duplicates the HTTP contract.
+- **Gate 3 (TypeScript safety)**: Share `HealthStatus` types between service, handlers, and tests; no `any` in handler payloads.
+- **Gate 4 (Documentation)**: Update feature `quickstart.md` and frontend `README.md` / `ARCHITECTURE.md` with MSW setup and env flags.
 
-[Gates determined based on constitution file]
+No constitution violations are introduced. MSW is justified because it keeps network semantics realistic while enabling backend-independent UI work.
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/[###-feature]/
-├── plan.md              # This file (/speckit.plan command output)
-├── research.md          # Phase 0 output (/speckit.plan command)
-├── data-model.md        # Phase 1 output (/speckit.plan command)
-├── quickstart.md        # Phase 1 output (/speckit.plan command)
-├── contracts/           # Phase 1 output (/speckit.plan command)
-└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
+specs/001-baseline-app-poc/
+├── spec.md
+├── plan.md
+├── research.md
+├── data-model.md
+├── quickstart.md
+├── contracts/
+│   └── health.md
+└── checklists/
+    └── requirements.md
 ```
 
-### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
+### Source Code (`employee-manager-fe`)
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
+employee-manager-fe/
 ├── src/
-│   ├── models/
+│   ├── main.tsx                 # Bootstrap; start MSW when enabled
+│   ├── App.tsx                  # Baseline connectivity UI
 │   ├── services/
-│   └── api/
+│   │   └── healthApi.ts         # Contract types + fetchHealthStatus
+│   └── mocks/
+│       ├── browser.ts           # worker.start() for Vite dev
+│       ├── server.ts            # setupServer for Bun tests
+│       └── handlers/
+│           └── health.ts        # http.get('/health', ...) handlers
+├── public/
+│   └── mockServiceWorker.js     # Generated by `msw init public`
 └── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+    └── healthApi.test.ts        # MSW-backed contract tests
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: Keep HTTP client logic in `services/healthApi.ts`. Colocate all MSW wiring under `src/mocks/` and remove the standalone `healthApiMock.ts` factory in favor of MSW handlers that return the same JSON contract.
+
+## Implementation Strategy
+
+1. **Add MSW**: Install `msw` as a dev dependency; run `msw init public` to emit the service worker script.
+2. **Define handlers**: Implement `GET /health` handler(s) for success and error scenarios in `src/mocks/handlers/health.ts`, using `VITE_API_BASE_URL` (or relative URLs) consistent with `buildHealthUrl`.
+3. **Browser worker**: In `src/mocks/browser.ts`, compose handlers and export `worker`; in `main.tsx`, call `worker.start({ onUnhandledRequest: 'bypass' })` when `import.meta.env.VITE_ENABLE_MSW === 'true'`.
+4. **Test server**: In `src/mocks/server.ts`, use `setupServer(...handlers)`; reset handlers in test `afterEach`.
+5. **Baseline UI**: Update `App.tsx` to call `fetchHealthStatus` on mount and render status, timestamp, and message (or error state).
+6. **Environment**: Document `VITE_API_BASE_URL` (default `http://localhost:3000`) and `VITE_ENABLE_MSW` (default `false` for live backend, `true` for UI-only dev).
+7. **Remove legacy mock**: Delete `src/mocks/healthApiMock.ts` and any imports; MSW replaces the in-memory mock factory.
+8. **Verification**: Follow `quickstart.md` for live-backend and MSW-only flows.
+
+## Phase 0 Research
+
+See `research.md`. MSW is selected over in-memory mock factories and Vite-only proxy stubs because it preserves real HTTP semantics and works in both browser dev and test runners.
+
+## Phase 1 Design Outcomes
+
+- Health contract documented in `contracts/health.md`.
+- `HealthStatus` entity documented in `data-model.md`.
+- Developer flows documented in `quickstart.md`.
 
 ## Complexity Tracking
 
-> **Fill ONLY if Constitution Check has violations that must be justified**
-
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+No constitution violations or complexity tradeoffs require formal justification at this stage.
