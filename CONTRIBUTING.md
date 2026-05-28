@@ -23,6 +23,19 @@ yarn workspace @employee-system/backend dev
 yarn workspace @employee-system/frontend dev
 ```
 
+## CI checks (system-specs repo)
+
+This repository has a CI workflow at `.github/workflows/ci.yml` focused on contract validation for spec artifacts.
+
+- Trigger: `pull_request` and pushes to `main`
+- Check: Redocly lint for spec 002 OpenAPI contract
+
+Run the same check locally:
+
+```bash
+bunx @redocly/cli lint specs/002-backend-connectivity/contracts/openapi.yaml --skip-rule security-defined
+```
+
 ## Branches
 
 - Create feature branches from `main`.
