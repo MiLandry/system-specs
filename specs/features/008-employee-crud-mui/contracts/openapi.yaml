@@ -1,0 +1,327 @@
+openapi: 3.1.0
+info:
+  title: Employee Manager BFF API — Employee CRUD (spec 008)
+  version: 0.1.0
+  description: View-centric employee endpoints for root-page Data Grid and dialogs.
+
+servers:
+  - url: http://localhost:3000
+    description: Local BFF
+
+paths:
+  /employees/list:
+    get:
+      operationId: listEmployees
+      summary: List employees for root-page grid
+      description: |
+        Returns employees for the Material UI Data Grid. Supports optional name search
+        and department filter query parameters. Requires `employees.read` permission.
+      tags:
+        - Employees
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Case-insensitive substring match on fullName
+        - name: department
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Exact department filter
+      responses:
+        '200':
+          description: Employee list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeListResponse'
+        '401':
+          description: Missing or invalid authentication principal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Principal not permitted to read employees
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+    post:
+      operationId: createEmployee
+      summary: Create employee from grid create dialog
+      description: Creates a new employee record. Requires `employees.create` permission (admin only in v1).
+      tags:
+        - Employees
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeCreateRequest'
+      responses:
+        '201':
+          description: Employee created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Duplicate email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /employees/list/create:
+    post:
+      operationId: createEmployeeFromListView
+      summary: Alias create endpoint for list widget (optional implementation path)
+      description: |
+        View-centric alias for create flow invoked from `/employees/list` widget.
+        Implementations MAY expose either this path or `POST /employees/list`; not both required in v1.
+      tags:
+        - Employees
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeCreateRequest'
+      responses:
+        '201':
+          description: Employee created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+
+  /employees/{id}/edit:
+    put:
+      operationId: updateEmployee
+      summary: Update employee from edit dialog
+      description: Replaces employee fields. Requires `employees.update` permission.
+      tags:
+        - Employees
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeUpdateRequest'
+      responses:
+        '200':
+          description: Employee updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Employee not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Duplicate email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /employees/{id}:
+    delete:
+      operationId: deleteEmployee
+      summary: Delete employee after confirmation dialog
+      description: Removes an employee record. Requires `employees.delete` permission (admin only in v1).
+      tags:
+        - Employees
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Employee deleted
+        '401':
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Employee not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+components:
+  schemas:
+    EmploymentStatus:
+      type: string
+      enum:
+        - active
+        - inactive
+        - on_leave
+
+    Employee:
+      type: object
+      required:
+        - id
+        - fullName
+        - email
+        - department
+        - jobTitle
+        - employmentStatus
+        - managerName
+        - startDate
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        department:
+          type: string
+        jobTitle:
+          type: string
+        employmentStatus:
+          $ref: '#/components/schemas/EmploymentStatus'
+        managerName:
+          type: string
+        startDate:
+          type: string
+          format: date
+        phone:
+          type: string
+        location:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    EmployeeCreateRequest:
+      type: object
+      required:
+        - fullName
+        - email
+        - department
+        - jobTitle
+        - employmentStatus
+        - managerName
+        - startDate
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        department:
+          type: string
+        jobTitle:
+          type: string
+        employmentStatus:
+          $ref: '#/components/schemas/EmploymentStatus'
+        managerName:
+          type: string
+        startDate:
+          type: string
+          format: date
+        phone:
+          type: string
+        location:
+          type: string
+
+    EmployeeUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/EmployeeCreateRequest'
+
+    EmployeeListResponse:
+      type: object
+      required:
+        - employees
+      properties:
+        employees:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'
+
+    ApiError:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+        code:
+          type: string
+          enum:
+            - UNAUTHENTICATED
+            - FORBIDDEN
+            - VALIDATION_ERROR
+            - DUPLICATE_EMAIL
+            - NOT_FOUND
