@@ -1,36 +1,10 @@
-# Contributing to Spec Kit Demo
+# Contributing to system-specs
 
-Thank you for contributing to this project. This repository follows a spec-driven workflow, and contributions should be clear, testable, and aligned with the existing architecture.
+This repository holds specification artifacts for the employee manager project. Application code lives in `employee-manager-be` and `employee-manager-fe`.
 
-## Getting Started
+## Local CI parity
 
-1. Install dependencies:
-
-```bash
-yarn install
-```
-
-2. Create a local environment file:
-
-```bash
-cp .env.example .env
-```
-
-3. Run the backend and frontend in separate terminals:
-
-```bash
-yarn workspace @employee-system/backend dev
-yarn workspace @employee-system/frontend dev
-```
-
-## CI checks (system-specs repo)
-
-This repository has a CI workflow at `.github/workflows/ci.yml` focused on contract validation for spec artifacts.
-
-- Trigger: `pull_request` and pushes to `main`
-- Check: Redocly lint for spec 002 OpenAPI contract
-
-Run the same check locally:
+CI validates OpenAPI contracts with Redocly. Run the same check locally:
 
 ```bash
 bunx @redocly/cli lint specs/002-backend-connectivity/contracts/openapi.yaml --skip-rule security-defined
@@ -38,58 +12,30 @@ bunx @redocly/cli lint specs/002-backend-connectivity/contracts/openapi.yaml --s
 
 ## Branches
 
-- Create feature branches from `main`.
-- Use descriptive branch names, such as `001-employee-management` or `feature/<short-description>`.
-- Keep branches focused on a single feature, bug fix, or documentation update.
+- Create feature branches from `main` (see constitution: feature number or `CHORE-` prefix).
+- Keep branches focused on a single spec, plan, or documentation update.
 
 ## Workflow
 
-This repository uses the Spec Kit workflow:
+1. Update or create spec artifacts under `specs/`.
+2. Use Spec Kit commands (`/speckit.plan`, `/speckit.tasks`, etc.) when applicable.
+3. Implement code in the backend or frontend repos, linked to the spec.
+4. Open a pull request with a clear description.
 
-1. Update or create spec artifacts in `specs/<feature>/spec.md`.
-2. Generate or update the implementation plan with `/speckit.plan` if applicable.
-3. Create or update task tracking in `specs/<feature>/tasks.md`.
-4. Implement code changes in the appropriate workspace (`backend/`, `frontend/`, `shared/`).
-5. Add or update tests before finalizing implementation.
-6. Open a pull request with a clear description and linked issue or feature spec.
+## Environment configuration
 
-## Testing
+Do not add `.env` files to this repo. Postgres and runtime settings belong in `employee-manager-be` (see `employee-manager-be/.env.example`).
 
-### Run all tests
+Optional local DB provisioning:
 
 ```bash
-yarn test
+.specify/scripts/setup-postgres.sh
 ```
 
-### Frontend tests
+The script reads `POSTGRES_*` from `employee-manager-be/.env` (or `.env.example`).
 
-```bash
-yarn workspace @employee-system/frontend test -- --runInBand
-```
+## Pull request checklist
 
-### Backend tests
-
-```bash
-yarn workspace @employee-system/backend test -- --runInBand
-```
-
-## Pull Request Checklist
-
-- [ ] Code implements the intended feature or fix.
-- [ ] Tests were added or updated and pass locally.
-- [ ] Documentation or specs were updated if needed.
-- [ ] The change is described clearly in the PR title and description.
-- [ ] No TODOs or placeholder text remain in production code.
-
-## Reporting Issues
-
-If you find a bug or unclear behavior, open a GitHub issue with:
-
-- A concise summary of the problem
-- Steps to reproduce
-- Expected and actual behavior
-- Any relevant logs or screenshots
-
-## Questions
-
-If you are unsure about the best way to contribute, please ask before making major architecture changes. When in doubt, keep changes small and focused.
+- [ ] Spec or contract changes match the intended feature scope.
+- [ ] OpenAPI contracts lint locally when changed.
+- [ ] No application secrets or `.env` files committed to this repo.
