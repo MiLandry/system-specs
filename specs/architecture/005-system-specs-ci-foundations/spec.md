@@ -21,7 +21,7 @@
 
 - Install repo dependencies with lockfile-respecting Bun install.
 - Validate OpenAPI contract for spec 002 with Redocly CLI:
-  - `bunx @redocly/cli lint specs/002-backend-connectivity/contracts/openapi.yaml`
+  - `bunx @redocly/cli lint specs/architecture/002-backend-connectivity/contracts/openapi.yaml`
 - Run any repository-level verification script if present (for example, spec consistency or markdown checks).
 
 ### Scope rules

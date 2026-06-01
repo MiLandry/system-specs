@@ -27,7 +27,7 @@ Expected: all commands pass on a healthy branch.
 
 `bun run build` should run `codegen:api` and read:
 
-`../system-specs/specs/002-backend-connectivity/contracts/openapi.yaml`
+`../system-specs/specs/architecture/002-backend-connectivity/contracts/openapi.yaml`
 
 Expected: `src/generated/openapi.ts` is regenerated successfully before TypeScript/Vite build.
 

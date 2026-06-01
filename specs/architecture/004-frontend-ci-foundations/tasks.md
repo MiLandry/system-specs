@@ -1,6 +1,6 @@
 # Tasks: Frontend CI foundations (spec 004)
 
-**Input**: Design docs from `/specs/004-frontend-ci-foundations/`  
+**Input**: Design docs from `/specs/architecture/004-frontend-ci-foundations/`  
 **Prerequisites**: `spec.md` (required)
 
 ## Phase 1: Setup

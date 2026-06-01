@@ -1,1 +1,9 @@
-The `specs/planned` directory will serve as a drafting area for specifications that are in the early stages of development. This is where initial ideas, user scenarios, requirements, and success criteria can be documented and iterated on before they are finalized and moved to the `specs` directory for planning and implementation. Any Agent tooling should ignore this directory to prevent confusion with finalized specifications. Once a specification in `specs/planned` is deemed ready, it can be moved to the `specs` directory and will then be subject to the standard planning and implementation processes.
+The `specs/planned` directory is a drafting area for specifications in early development. Document ideas, user scenarios, requirements, and success criteria here before they are finalized.
+
+Once ready, move specs into:
+
+- `specs/architecture/` — cross-cutting foundation work (numbered 001–006)
+- `specs/features/` — product features (numbered 008+)
+- `specs/roadmap/` — deferred or future hardening work
+
+Agent tooling SHOULD ignore `specs/planned` to avoid confusion with finalized specifications.

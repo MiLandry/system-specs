@@ -1,7 +1,7 @@
 # Implementation Plan: Baseline UI POC
 
-**Branch**: `001-baseline-app-poc` | **Date**: 2026-05-27 | **Spec**: `specs/001-baseline-app-poc/spec.md`
-**Input**: Feature specification from `/specs/001-baseline-app-poc/spec.md`
+**Branch**: `001-baseline-app-poc` | **Date**: 2026-05-27 | **Spec**: `specs/architecture/001-baseline-app-poc/spec.md`
+**Input**: Feature specification from `/specs/architecture/001-baseline-app-poc/spec.md`
 
 ## Summary
 
@@ -33,7 +33,7 @@ No constitution violations are introduced. MSW is justified because it keeps net
 ### Documentation (this feature)
 
 ```text
-specs/001-baseline-app-poc/
+specs/architecture/001-baseline-app-poc/
 ├── spec.md
 ├── plan.md
 ├── research.md

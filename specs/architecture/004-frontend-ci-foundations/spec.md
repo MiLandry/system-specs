@@ -29,7 +29,7 @@
 
 ### OpenAPI codegen dependency
 
-- `employee-manager-fe` build depends on `codegen:api` reading `../system-specs/specs/002-backend-connectivity/contracts/openapi.yaml`.
+- `employee-manager-fe` build depends on `codegen:api` reading `../system-specs/specs/architecture/002-backend-connectivity/contracts/openapi.yaml`.
 - CI checks out `system-specs` and makes that path available to FE workflow execution (for example by linking to `../system-specs`).
 - Canonical contract source remains `system-specs`; generated FE output remains derived artifact.
 

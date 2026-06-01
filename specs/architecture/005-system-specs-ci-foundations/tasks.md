@@ -1,6 +1,6 @@
 # Tasks: System-specs CI foundations (spec 005)
 
-**Input**: Design docs from `/specs/005-system-specs-ci-foundations/`  
+**Input**: Design docs from `/specs/architecture/005-system-specs-ci-foundations/`  
 **Prerequisites**: `spec.md` (required)
 
 ## Phase 1: Setup
@@ -15,7 +15,7 @@
 - [ ] T005 Add `pull_request` and `push` (`main`) triggers
 - [ ] T006 Add Bun setup and pinned version
 - [ ] T007 Add install step with lockfile enforcement
-- [ ] T008 Add Redocly lint step for `specs/002-backend-connectivity/contracts/openapi.yaml`
+- [ ] T008 Add Redocly lint step for `specs/architecture/002-backend-connectivity/contracts/openapi.yaml`
 - [ ] T009 Add concurrency cancellation for stale runs
 
 ## Phase 3: Documentation (US2)

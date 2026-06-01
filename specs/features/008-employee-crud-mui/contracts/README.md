@@ -47,5 +47,5 @@ Until real auth lands, local/testing requests use mock principal headers from sp
 ## Related specs
 
 - [`../spec.md`](../spec.md) — feature requirements
-- [`../../006-auth-phase1-simple/spec.md`](../../006-auth-phase1-simple/spec.md) — mock auth baseline
-- [`../../002-backend-connectivity/contracts/openapi.yaml`](../../002-backend-connectivity/contracts/openapi.yaml) — health contract (separate)
+- [`../../architecture/006-auth-phase1-simple/spec.md`](../../architecture/006-auth-phase1-simple/spec.md) — mock auth baseline
+- [`../../architecture/002-backend-connectivity/contracts/openapi.yaml`](../../architecture/002-backend-connectivity/contracts/openapi.yaml) — health contract (separate)

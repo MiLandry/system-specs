@@ -2,7 +2,7 @@
 
 Specification and contract artifacts for the employee manager project.
 
-- **Specs**: `specs/`
+- **Specs**: `specs/` (`architecture/` for foundation specs 001–006, `features/` for product features, `roadmap/` for deferred work)
 - **Constitution**: `.specify/memory/constitution.md`
 - **Contributing**: [CONTRIBUTING.md](CONTRIBUTING.md)
 

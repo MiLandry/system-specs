@@ -15,7 +15,7 @@ Run this on your machine when changing the contract. **Automated lint in CI is o
 From `system-specs`:
 
 ```bash
-bunx @redocly/cli lint specs/002-backend-connectivity/contracts/openapi.yaml
+bunx @redocly/cli lint specs/architecture/002-backend-connectivity/contracts/openapi.yaml
 ```
 
 ## Codegen (per repo, step 3+)
@@ -24,7 +24,7 @@ bunx @redocly/cli lint specs/002-backend-connectivity/contracts/openapi.yaml
 
 ```bash
 bun add -d openapi-typescript
-bunx openapi-typescript ../system-specs/specs/002-backend-connectivity/contracts/openapi.yaml -o src/generated/openapi.ts
+bunx openapi-typescript ../system-specs/specs/architecture/002-backend-connectivity/contracts/openapi.yaml -o src/generated/openapi.ts
 ```
 
 Or `bun run codegen:api` from `employee-manager-fe` (same output path). Output is gitignored under `src/generated/`; `prebuild:app` runs before `build:app`, and `bun run clean` removes it.
