@@ -45,7 +45,7 @@ Extend MSW setup for employee list/mutation endpoints in FE tests (same pattern 
 
 ## Decision 6: Persistence delegated to spec 009
 
-Employee data architecture, migrations, and repository implementation are specified in [`../009-employee-data-architecture/spec.md`](../009-employee-data-architecture/spec.md) to keep CRUD feature scope focused on UI/API behavior.
+Employee data architecture, migrations, and repository implementation are specified in [`../../architecture/009-employee-data-architecture/spec.md`](../../architecture/009-employee-data-architecture/spec.md) to keep CRUD feature scope focused on UI/API behavior.
 
 ## Open questions (non-blocking)
 

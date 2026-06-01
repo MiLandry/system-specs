@@ -2,8 +2,8 @@ The `specs/planned` directory is a drafting area for specifications in early dev
 
 Once ready, move specs into:
 
-- `specs/architecture/` — cross-cutting foundation work (numbered 001–006)
-- `specs/features/` — product features (numbered 008+)
+- `specs/architecture/` — cross-cutting foundation work (numbered 001–009)
+- `specs/features/` — product features (e.g. 008)
 - `specs/roadmap/` — deferred or future hardening work
 
 Agent tooling SHOULD ignore `specs/planned` to avoid confusion with finalized specifications.
