@@ -1,8 +1,8 @@
 <!--
 Sync Impact Report:
-- Version change: 1.1.0 → 1.1.1
-- Modified principles: none
-- Added sections: Branch naming guidance (Feature Branch Workflow)
+- Version change: 1.1.1 → 1.1.2
+- Modified principles: Simplicity-First Architecture (barrel file prohibition with library exception)
+- Added sections: none
 - Removed sections: none
 - Templates reviewed: .specify/templates/plan-template.md ✅, .specify/templates/spec-template.md ✅, .specify/templates/tasks-template.md ✅
 - Follow-up TODOs: none
@@ -19,7 +19,7 @@ Every significant feature or piece of business logic is implemented first as a s
 No implementation code is written until unit and integration tests are authored, reviewed, and confirmed to fail. Follow the Red-Green-Refactor cycle strictly, and prefer realistic integration-style tests over excessive mocking where practical.
 
 ### III. Simplicity-First Architecture
-Trust the framework and language directly. Avoid unnecessary wrappers, meta-abstractions, and clever indirection. Keep the project structure minimal, and add complexity only when it is explicitly justified and documented.
+Trust the framework and language directly. Avoid unnecessary wrappers, meta-abstractions, and clever indirection. Keep the project structure minimal, and add complexity only when it is explicitly justified and documented. Barrel files (modules that exist primarily to re-export symbols from other modules, commonly `index.ts`) are prohibited in application code; import directly from the defining module instead. The sole exception is a standalone library module's public entry point (see Architecture Constraints).
 
 ### IV. Strict TypeScript Safety
 The entire codebase is authored in strict TypeScript. `any` is prohibited except for clearly justified, temporary migration scaffolding. Types and interfaces are explicit, stable, and used to improve readability and reliability.
@@ -38,6 +38,8 @@ This project is a modern full-stack web application built with Node.js on the ba
 - View-centric APIs should map endpoint paths to frontend URLs, suffixed with the widget or component serviced. APIs that do not directly serve frontend views must remain data-centric.
 - Frontend components are accessible, material-inspired, and predictable.
 - Shared packages centralize domain types, validation, and business logic for reuse across backend and frontend.
+- Barrel files are prohibited in application code (backend, frontend, and in-app shared modules). Do not create `index.ts` (or equivalent) modules whose primary purpose is re-exporting from other files; consumers MUST import from the source module path directly.
+- Standalone library modules MAY expose a single public entry point (e.g., `index.ts` or a `package.json` export map) to define the library's external API boundary. Internal library code SHOULD still use direct imports between modules where practical.
 
 ## Workflow and Quality Rules
 Follow the Spec Kit workflow: constitution → specify → plan → tasks → implement. Each implementation must be traceable to a spec and task artifact.
@@ -63,4 +65,4 @@ This constitution is the authoritative guide for project decisions. Amendments r
 - Any deviation from the constitution must be documented and ratified in the next version.
 - Security, performance, and maintainability concerns must be addressed in the corresponding spec and plan.
 
-**Version**: 1.1.1 | **Ratified**: 2026-04-17 | **Last Amended**: 2026-05-31
+**Version**: 1.1.2 | **Ratified**: 2026-04-17 | **Last Amended**: 2026-05-31
