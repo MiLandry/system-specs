@@ -1,7 +1,7 @@
 # Implementation Plan: Employee Data Architecture
 
 **Branch**: `009-employee-data-architecture` | **Date**: 2026-05-30 | **Spec**: [`spec.md`](spec.md)  
-**Input**: Feature specification from `/specs/features/009-employee-data-architecture/spec.md`
+**Input**: Feature specification from `/specs/architecture/009-employee-data-architecture/spec.md`
 
 ## Summary
 
@@ -28,7 +28,7 @@ Implement PostgreSQL persistence for employee CRUD: shared connection pool, vers
 ### Documentation (this feature)
 
 ```text
-specs/features/009-employee-data-architecture/
+specs/architecture/009-employee-data-architecture/
 ├── spec.md
 ├── plan.md
 ├── research.md

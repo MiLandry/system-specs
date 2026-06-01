@@ -1,6 +1,6 @@
 # Tasks: Auth phase 1 (simple)
 
-**Input**: Design docs from `/specs/006-auth-phase1-simple/`  
+**Input**: Design docs from `/specs/architecture/006-auth-phase1-simple/`  
 **Prerequisites**: `spec.md` (required)
 
 ## Phase 1: Authorization surface

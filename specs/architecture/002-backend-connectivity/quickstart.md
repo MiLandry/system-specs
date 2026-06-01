@@ -8,14 +8,14 @@ Verify OpenAPI locally from the `system-specs` checkout:
 
 ```bash
 cd path/to/system-specs
-bunx @redocly/cli lint specs/002-backend-connectivity/contracts/openapi.yaml
+bunx @redocly/cli lint specs/architecture/002-backend-connectivity/contracts/openapi.yaml
 ```
 
 Preview (optional):
 
 ```bash
 cd path/to/system-specs
-bunx @redocly/cli preview-docs specs/002-backend-connectivity/contracts/openapi.yaml
+bunx @redocly/cli preview-docs specs/architecture/002-backend-connectivity/contracts/openapi.yaml
 ```
 
 ## Step 2 — Backend (`employee-manager-be`)

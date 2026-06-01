@@ -16,7 +16,7 @@ Expected: workflow exists and triggers on PRs and pushes to `main`.
 ```bash
 cd path/to/system-specs
 bun install --frozen-lockfile
-bunx @redocly/cli lint specs/002-backend-connectivity/contracts/openapi.yaml
+bunx @redocly/cli lint specs/architecture/002-backend-connectivity/contracts/openapi.yaml
 ```
 
 Expected: install succeeds and OpenAPI lint passes.
@@ -33,7 +33,7 @@ Expected: check appears on PR and blocks merge on failures.
 
 Temporarily introduce an invalid OpenAPI change in:
 
-`specs/002-backend-connectivity/contracts/openapi.yaml`
+`specs/architecture/002-backend-connectivity/contracts/openapi.yaml`
 
 Expected: CI fails contract lint with actionable output.
 

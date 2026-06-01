@@ -7,7 +7,7 @@ This repository holds specification artifacts for the employee manager project. 
 CI validates OpenAPI contracts with Redocly. Run the same check locally:
 
 ```bash
-bunx @redocly/cli lint specs/002-backend-connectivity/contracts/openapi.yaml --skip-rule security-defined
+bunx @redocly/cli lint specs/architecture/002-backend-connectivity/contracts/openapi.yaml --skip-rule security-defined
 ```
 
 ## Branches

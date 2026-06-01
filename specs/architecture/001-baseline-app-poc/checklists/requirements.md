@@ -1,8 +1,8 @@
-# Specification Quality Checklist: Employee Management System
+# Specification Quality Checklist: Baseline App POC
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
-**Created**: 2026-04-17
-**Feature**: ../spec.md
+**Created**: 2026-05-26
+**Feature**: `specs/architecture/001-baseline-app-poc/spec.md`
 
 ## Content Quality
 
@@ -31,4 +31,5 @@
 
 ## Notes
 
-- Items marked complete indicate the initial spec is ready for planning.
+- MSW (Mock Service Worker) is an intentional implementation choice for API mocking in this feature; it is documented in the spec assumptions and functional requirements.
+- Items marked incomplete require spec updates before `/speckit.clarify` or `/speckit.plan`

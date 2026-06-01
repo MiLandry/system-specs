@@ -1,6 +1,6 @@
 # Tasks: CI foundations (spec 003)
 
-**Input**: Design documents from `/specs/003-ci-foundations/`  
+**Input**: Design documents from `/specs/architecture/003-ci-foundations/`  
 **Prerequisites**: `spec.md` (required)
 
 **Tests**: CI validation tasks are included because this feature is about automated checks and quality gating.
@@ -19,7 +19,7 @@
 
 **Purpose**: Establish scope and baseline workflow conventions.
 
-- [ ] T001 Confirm backend-only scope and out-of-scope items in `/specs/003-ci-foundations/spec.md`
+- [ ] T001 Confirm backend-only scope and out-of-scope items in `/specs/architecture/003-ci-foundations/spec.md`
 - [ ] T002 Review existing backend scripts in `employee-manager-be/package.json` (`typecheck`, `test`, `build`)
 - [ ] T003 Define pinned Bun runtime version for CI workflow in `employee-manager-be/.github/workflows/ci.yml`
 
@@ -96,7 +96,7 @@
 **Purpose**: Final verification and handoff for repository policy adoption.
 
 - [ ] T020 [P] Verify workflow file formatting and readability in `employee-manager-be/.github/workflows/ci.yml`
-- [ ] T021 [P] Confirm documentation consistency between `employee-manager-be/README.md` and `/specs/003-ci-foundations/spec.md`
+- [ ] T021 [P] Confirm documentation consistency between `employee-manager-be/README.md` and `/specs/architecture/003-ci-foundations/spec.md`
 - [ ] T022 Prepare branch protection recommendation: add backend CI workflow as required status check (repo settings)
 - [ ] T023 Record follow-up scope for next specs: frontend CI and optional service container integration jobs
 

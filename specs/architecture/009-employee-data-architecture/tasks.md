@@ -1,6 +1,6 @@
 # Tasks: Employee Data Architecture (spec 009)
 
-**Input**: Design documents from `/specs/features/009-employee-data-architecture/`  
+**Input**: Design documents from `/specs/architecture/009-employee-data-architecture/`  
 **Prerequisites**: `spec.md`, `plan.md`, `data-architecture.md`, `database-management.md`, `data-model.md` (required)
 
 **Implementation repo**: `employee-manager-be`  
@@ -22,7 +22,7 @@
 
 **Purpose**: Confirm scope, baseline paths, and local Postgres readiness.
 
-- [ ] T001 Review spec 009 scope and out-of-scope items in `system-specs/specs/features/009-employee-data-architecture/spec.md` (no route handlers, no FE work)
+- [ ] T001 Review spec 009 scope and out-of-scope items in `system-specs/specs/architecture/009-employee-data-architecture/spec.md` (no route handlers, no FE work)
 - [ ] T002 Review existing health probe pattern in `employee-manager-be/src/db/probe.ts` and env loading in `employee-manager-be/src/env.ts`
 - [ ] T003 Verify local Postgres via `system-specs/.specify/scripts/setup-postgres.sh` and `employee-manager-be/.env` (`POSTGRES_*`)
 
@@ -111,7 +111,7 @@
 
 - [ ] T029 [US3] Implement `employee-manager-be/scripts/db-seed.ts` and wire `db:seed` in `employee-manager-be/package.json`
 - [ ] T030 [US3] Implement `employee-manager-be/scripts/db-reset.ts` (truncate `employees` only) with local-env guard; wire `db:reset` in `package.json`
-- [ ] T031 [US3] GREEN seed and reset tests; manual verify per `system-specs/specs/features/009-employee-data-architecture/quickstart.md`
+- [ ] T031 [US3] GREEN seed and reset tests; manual verify per `system-specs/specs/architecture/009-employee-data-architecture/quickstart.md`
 
 **Checkpoint**: Local dev workflow migrate → seed → reset is repeatable and safe.
 
@@ -125,7 +125,7 @@
 - [ ] T033 [P] Update `employee-manager-be/README.md` with `db:migrate`, `db:seed`, `db:reset` scripts and local Postgres prerequisites
 - [ ] T034 [P] Document CI strategy (mock repository in route tests until Postgres service container) in `employee-manager-be/README.md`
 - [ ] T035 Run full local suite: `bun run typecheck`, `bun test`, `bun run build` in `employee-manager-be`
-- [ ] T036 Run quickstart validation steps in `system-specs/specs/features/009-employee-data-architecture/quickstart.md`
+- [ ] T036 Run quickstart validation steps in `system-specs/specs/architecture/009-employee-data-architecture/quickstart.md`
 - [ ] T037 Confirm no SQL strings added to `employee-manager-be/src/app.ts` or future route modules (FR-003 static review)
 
 **Checkpoint**: Spec 008 can consume `employeesRepository` from a stable export; docs match behavior.
