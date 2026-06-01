@@ -1,9 +1,9 @@
 <!--
 Sync Impact Report:
-- Version change: 0.2.1 → 1.0.0
-- Modified principles: removed "CLI Exposure"
-- Added sections: none
-- Removed sections: CLI Exposure
+- Version change: 1.1.0 → 1.1.1
+- Modified principles: none
+- Added sections: Branch naming guidance (Feature Branch Workflow)
+- Removed sections: none
 - Templates reviewed: .specify/templates/plan-template.md ✅, .specify/templates/spec-template.md ✅, .specify/templates/tasks-template.md ✅
 - Follow-up TODOs: none
 -->
@@ -42,6 +42,14 @@ This project is a modern full-stack web application built with Node.js on the ba
 ## Workflow and Quality Rules
 Follow the Spec Kit workflow: constitution → specify → plan → tasks → implement. Each implementation must be traceable to a spec and task artifact.
 
+### Feature Branch Workflow
+All work MUST be done on a feature branch. Direct commits to `main` are prohibited. Create a branch from `main` before starting any spec, plan, task, or implementation work, and merge changes back via pull request only.
+
+Branch names SHOULD be prefixed for traceability:
+
+- **Feature work**: prefix with the linked spec feature number (e.g., `008-employee-crud-mui`).
+- **Non-feature work** (tooling, docs, maintenance, constitution updates): prefix with `CHORE-` (e.g., `CHORE-update-constitution`).
+
 - Specs define behavior, acceptance criteria, and non-functional expectations.
 - Plans document architecture, tradeoffs, and test strategy before coding begins.
 - Tasks break work into discrete, reviewable units with clear acceptance criteria.
@@ -51,7 +59,8 @@ Follow the Spec Kit workflow: constitution → specify → plan → tasks → im
 This constitution is the authoritative guide for project decisions. Amendments require a documented proposal, version bump, and approval from the project lead.
 
 - All feature work must be linked to spec artifacts before implementation.
+- All work MUST be done on feature branches; direct commits to `main` are prohibited.
 - Any deviation from the constitution must be documented and ratified in the next version.
 - Security, performance, and maintainability concerns must be addressed in the corresponding spec and plan.
 
-**Version**: 1.0.0 | **Ratified**: 2026-04-17 | **Last Amended**: 2026-05-26
+**Version**: 1.1.1 | **Ratified**: 2026-04-17 | **Last Amended**: 2026-05-31
