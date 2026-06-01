@@ -10,10 +10,14 @@ Manual verification guide for persistence layer after implementation.
 
 ## Step 1 — Provision database
 
+Configure `employee-manager-be/.env` first (see `employee-manager-be/.env.example`), then:
+
 ```bash
 cd path/to/system-specs
 .specify/scripts/setup-postgres.sh
 ```
+
+The script loads `POSTGRES_*` from the backend repo, not from system-specs.
 
 ## Step 2 — Apply migrations
 
