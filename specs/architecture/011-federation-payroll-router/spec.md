@@ -13,7 +13,8 @@
 ## Subgraph contracts
 
 - SDL sources of truth for composition: `employee-manager-router/subgraphs/*.graphql`
-- Composed supergraph: `employee-manager-router/supergraph.graphql` (regenerate with `bun run compose` in router package)
+- Composed supergraph (router runtime): `employee-manager-router/supergraph.graphql` (regenerate with `bun run compose` in router package)
+- **Frontend codegen contract**: [`contracts/supergraph.graphql`](contracts/supergraph.graphql) — copy from router after compose; checked into system-specs so FE CI can resolve schema via the existing system-specs checkout
 
 ## Behavior
 

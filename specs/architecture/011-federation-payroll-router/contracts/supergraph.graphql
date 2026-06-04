@@ -1,0 +1,147 @@
+schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/join/v0.3", for: EXECUTION)
+{
+  query: Query
+  mutation: Mutation
+}
+
+directive @join__enumValue(graph: join__Graph!) repeatable on ENUM_VALUE
+
+directive @join__field(graph: join__Graph, requires: join__FieldSet, provides: join__FieldSet, type: String, external: Boolean, override: String, usedOverridden: Boolean) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
+
+directive @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false, resolvable: Boolean! = true, isInterfaceObject: Boolean! = false) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @join__unionMember(graph: join__Graph!, member: String!) repeatable on UNION
+
+directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+
+type CompensationSummary
+  @join__type(graph: PAYROLL)
+{
+  payGrade: String!
+  currency: String!
+  annualBase: Float!
+}
+
+type DbProbe
+  @join__type(graph: EMPLOYEES)
+{
+  status: DbStatus!
+  error: String
+}
+
+enum DbStatus
+  @join__type(graph: EMPLOYEES)
+{
+  up @join__enumValue(graph: EMPLOYEES)
+  down @join__enumValue(graph: EMPLOYEES)
+}
+
+type Employee
+  @join__type(graph: EMPLOYEES, key: "id")
+  @join__type(graph: PAYROLL, key: "id", extension: true)
+{
+  id: ID!
+  fullName: String! @join__field(graph: EMPLOYEES)
+  email: String! @join__field(graph: EMPLOYEES)
+  department: String! @join__field(graph: EMPLOYEES)
+  jobTitle: String! @join__field(graph: EMPLOYEES)
+  employmentStatus: EmploymentStatus! @join__field(graph: EMPLOYEES)
+  managerName: String! @join__field(graph: EMPLOYEES)
+  startDate: String! @join__field(graph: EMPLOYEES)
+  phone: String @join__field(graph: EMPLOYEES)
+  location: String @join__field(graph: EMPLOYEES)
+  createdAt: String! @join__field(graph: EMPLOYEES)
+  updatedAt: String! @join__field(graph: EMPLOYEES)
+  compensationSummary: CompensationSummary @join__field(graph: PAYROLL)
+  lastPayStub: PayStub @join__field(graph: PAYROLL)
+}
+
+input EmployeeInput
+  @join__type(graph: EMPLOYEES)
+{
+  fullName: String!
+  email: String!
+  department: String!
+  jobTitle: String!
+  employmentStatus: EmploymentStatus!
+  managerName: String!
+  startDate: String!
+  phone: String
+  location: String
+}
+
+enum EmploymentStatus
+  @join__type(graph: EMPLOYEES)
+{
+  active @join__enumValue(graph: EMPLOYEES)
+  inactive @join__enumValue(graph: EMPLOYEES)
+  on_leave @join__enumValue(graph: EMPLOYEES)
+}
+
+type Health
+  @join__type(graph: EMPLOYEES)
+{
+  status: HealthStatus!
+  timestamp: String!
+  message: String
+  db: DbProbe!
+}
+
+enum HealthStatus
+  @join__type(graph: EMPLOYEES)
+{
+  ok @join__enumValue(graph: EMPLOYEES)
+  error @join__enumValue(graph: EMPLOYEES)
+}
+
+scalar join__FieldSet
+
+enum join__Graph {
+  EMPLOYEES @join__graph(name: "employees", url: "http://host.docker.internal:3000/graphql")
+  PAYROLL @join__graph(name: "payroll", url: "http://host.docker.internal:3001/graphql")
+}
+
+scalar link__Import
+
+enum link__Purpose {
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+
+  """
+  `EXECUTION` features provide metadata necessary for operation execution.
+  """
+  EXECUTION
+}
+
+type Mutation
+  @join__type(graph: EMPLOYEES)
+{
+  createEmployee(input: EmployeeInput!): Employee!
+  updateEmployee(id: ID!, input: EmployeeInput!): Employee!
+  deleteEmployee(id: ID!): Boolean!
+}
+
+type PayStub
+  @join__type(graph: PAYROLL)
+{
+  periodEnd: String!
+  netPay: Float!
+  currency: String!
+}
+
+type Query
+  @join__type(graph: EMPLOYEES)
+  @join__type(graph: PAYROLL)
+{
+  health: Health! @join__field(graph: EMPLOYEES)
+  employees(name: String, department: String): [Employee!]! @join__field(graph: EMPLOYEES)
+  payrollStatus: String! @join__field(graph: PAYROLL)
+}
